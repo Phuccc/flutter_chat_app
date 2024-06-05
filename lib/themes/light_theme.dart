@@ -8,5 +8,3 @@ ThemeData lightTheme = ThemeData(
       tertiary: Colors.pink.shade200,
       inversePrimary: Colors.grey.shade700),
 );
-
-ThemeData darkTheme = ThemeData.dark();

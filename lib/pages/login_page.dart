@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_app/auth/auth_service.dart';
+import 'package:flutter_chat_app/services/auth/auth_service.dart';
 import 'package:flutter_chat_app/components/buttom.dart';
 import 'package:flutter_chat_app/components/textfield.dart';
-import 'package:flutter_chat_app/pages/register_page.dart';
 
 class LoginPage extends StatelessWidget {
   // Email và mật khẩu (Text controller)
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _pwController = TextEditingController();
+  final void Function()? onTap;
 
-  LoginPage({super.key});
+  LoginPage({super.key, this.onTap});
 
   // Login method
   void login(BuildContext context) async {
@@ -36,64 +36,57 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Logo
-            Image.asset(
-              'assets/Logo.png',
-              width: 140,
-              height: 140,
-            ),
-
-            // Tên app
-            Text(
-              'Chat Friendly',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Logo
+              Image.asset(
+                'assets/Logo.png',
+                width: 140,
+                height: 140,
               ),
-            ),
 
-            const SizedBox(height: 50),
+              // Tên app
+              Text(
+                'Chat Friendly',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
 
-            // Email
-            TextField_Edit(
-              hintText: 'Email . . . ',
-              obscureText: false,
-              controller: _emailController,
-            ),
+              const SizedBox(height: 50),
 
-            const SizedBox(height: 10),
+              // Email
+              TextField_Edit(
+                hintText: 'Email . . . ',
+                obscureText: false,
+                controller: _emailController,
+              ),
 
-            // Mật khẩu
-            TextField_Edit(
-              hintText: 'Password . . . ',
-              obscureText: true,
-              controller: _pwController,
-            ),
+              const SizedBox(height: 10),
 
-            const SizedBox(height: 25),
+              // Mật khẩu
+              TextField_Edit(
+                hintText: 'Password . . . ',
+                obscureText: true,
+                controller: _pwController,
+              ),
 
-            // Nút login
-            Buttom_Edit(
-              text: 'Login',
-              onTap: () => login(context),
-            ),
+              const SizedBox(height: 25),
 
-            const SizedBox(height: 25),
+              // Nút login
+              Buttom_Edit(
+                text: 'Login',
+                onTap: () => login(context),
+              ),
 
-            // Chọn register
-            GestureDetector(
-              onTap: () {
-                // Chuyển trang sang RegisterPage
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegisterPage()),
-                );
-              },
-              child: Row(
+              const SizedBox(height: 25),
+
+              // Chọn register
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
@@ -101,16 +94,19 @@ class LoginPage extends StatelessWidget {
                     style:
                         TextStyle(color: Theme.of(context).colorScheme.primary),
                   ),
-                  Text(
-                    "Register now",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary),
+                  GestureDetector(
+                    onTap: onTap,
+                    child: Text(
+                      "Register now",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary),
+                    ),
                   )
                 ],
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
