@@ -34,7 +34,7 @@ class ChatService {
     final Timestamp timestamp = Timestamp.now();
 
     // Tạo 1 message mới
-    Message newmessage = Message(
+    Message newMessage = Message(
       senderID: currentUserID,
       senderEmail: currentUserEmail,
       receiverID: receiverID,
@@ -52,7 +52,7 @@ class ChatService {
         .collection("chat_rooms")
         .doc(chatRoomID)
         .collection("messages")
-        .add(newmessage.toMap());
+        .add(newMessage.toMap());
   }
 
   // Lấy tin nhắn để hiển thị

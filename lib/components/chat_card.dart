@@ -4,12 +4,14 @@ class ChatCard extends StatelessWidget {
   final String email;
   final void Function()? onTap;
   final String message;
+  final String imageUrl;
 
   const ChatCard({
     super.key,
     required this.email,
     this.onTap,
     required this.message,
+    required this.imageUrl,
   });
 
   @override
@@ -31,9 +33,15 @@ class ChatCard extends StatelessWidget {
           onTap: onTap,
           child: ListTile(
             // User avatar
-            leading: const CircleAvatar(
-              child: Icon(
-                Icons.person,
+            leading: CircleAvatar(
+              radius: 27,
+              child: ClipOval(
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  width: 50,
+                  height: 50,
+                ),
               ),
             ),
 

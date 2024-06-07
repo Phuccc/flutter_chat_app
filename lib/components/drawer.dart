@@ -8,12 +8,13 @@ class Drawer_Edit extends StatelessWidget {
   const Drawer_Edit({super.key});
 
   void logout() {
-    final auth = AuthService();
-    auth.signOut();
+    AuthService().signOut();
   }
 
   @override
   Widget build(BuildContext context) {
+    final String email = AuthService().getEmail().toString();
+    final String userID = AuthService().getCurrentUser()!.uid;
     return Drawer(
       backgroundColor: Theme.of(context).colorScheme.background,
       child: Column(
@@ -81,7 +82,10 @@ class Drawer_Edit extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const AccountPage(),
+                          builder: (context) => AccountPage(
+                            email: email,
+                            userID: userID,
+                          ),
                         ));
                   },
                 ),

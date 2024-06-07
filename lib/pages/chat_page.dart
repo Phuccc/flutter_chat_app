@@ -103,7 +103,9 @@ class _ChatPageState extends State<ChatPage> {
       builder: (context, snapshot) {
         // Loading
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text("Loading...");
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         }
 
         // Error

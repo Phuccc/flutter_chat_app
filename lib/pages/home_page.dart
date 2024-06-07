@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
           ),
         ),
         title: Text(
-          "Chat riendly",
+          "Chat Friendly",
           style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Theme.of(context).colorScheme.primary),
@@ -61,7 +61,9 @@ class HomePage extends StatelessWidget {
       builder: (context, snapshot) {
         // Loading
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text("Loading...");
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         }
 
         // Error
@@ -84,6 +86,7 @@ class HomePage extends StatelessWidget {
     if (userData["email"] != _authService.getCurrentUser()!.email) {
       return ChatCard(
         email: userData["email"],
+        imageUrl: userData["image"],
         message: '',
         onTap: () {
           Navigator.push(
@@ -91,7 +94,7 @@ class HomePage extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => ChatPage(
                 receivedEmail: userData["email"],
-                receiverID: userData["uid"],
+                receiverID: userData["id"],
               ),
             ),
           );
