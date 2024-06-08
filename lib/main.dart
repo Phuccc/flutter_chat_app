@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/services/auth/auth_gate.dart';
 import 'package:flutter_chat_app/firebase_options.dart';
+import 'package:flutter_chat_app/services/notification/notification_service.dart';
 import 'package:flutter_chat_app/themes/light_theme.dart';
 
 @pragma('vm:entry-point')
@@ -19,6 +20,13 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await NotificationService().requestNotification();
+  NotificationService().foregroundMessages();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  final fcmToken = await FirebaseMessaging.instance.getToken();
+  print('Token: $fcmToken');
 
   runApp(const MyApp());
 }
