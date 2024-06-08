@@ -1,15 +1,57 @@
+// ignore_for_file: unnecessary_const
+
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/components/chat_card.dart';
 import 'package:flutter_chat_app/components/drawer.dart';
+import 'package:flutter_chat_app/components/textfield.dart';
 import 'package:flutter_chat_app/pages/chat_page.dart';
 import 'package:flutter_chat_app/services/auth/auth_service.dart';
 import 'package:flutter_chat_app/services/chat/chat_service.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final ChatService _chatService = ChatService();
+
   final AuthService _authService = AuthService();
+
+  final TextEditingController _searchController = TextEditingController();
+  // Dach sách người dùng
+  List<Map<String, dynamic>> _userList = [];
+  // Danh sách người dùng đã lọc
+  List<Map<String, dynamic>> _filteredUserList = [];
+
+  bool _showSearchBar = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserList();
+  }
+
+  // Cập nhật danh sách người dùng
+  void _fetchUserList() {
+    _chatService.getUsersStream().listen((users) {
+      setState(() {
+        _userList = users;
+        _filteredUserList = users;
+      });
+    });
+  }
+
+  // Lọc danh sách người dùng
+  void _filterUserList(String query) {
+    setState(() {
+      _filteredUserList = _userList.where((user) {
+        return user["email"].toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,24 +75,49 @@ class HomePage extends StatelessWidget {
         ),
         actions: [
           // Nút tìm kiếm người dùng
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search_rounded))
+          IconButton(
+            onPressed: () {
+              // Khi IconButton được nhấn, thay đổi trạng thái của thanh tìm kiếm
+              setState(() {
+                if (_showSearchBar) {
+                  // Nếu đang hiển thị thanh tìm kiếm, đặt lại bộ điều khiển tìm kiếm
+                  _searchController.clear();
+                  _filteredUserList = _userList;
+                }
+                _showSearchBar = !_showSearchBar;
+              });
+            },
+            icon: const Icon(Icons.search_rounded),
+          ),
         ],
       ),
 
       // Ngăn kéo tuỳ chọn
       drawer: const Drawer_Edit(),
 
-      body: _buildUserList(),
-
-      // Nút thêm người dùng
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50.0),
-        ),
-        elevation: 8.0,
-        child: const Icon(Icons.person_add_alt_1_rounded),
+      // Body
+      body: Column(
+        children: [
+          // Hiển thị danh sách người dùng
+          if (_showSearchBar)
+            // Mở thanh tìm kiếm theo email
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: TextField_Edit(
+                controller: _searchController,
+                onChanged: _filterUserList,
+                hintText: "Search by email",
+                obscureText: false,
+                suffixIcon: Icon(
+                  Icons.search,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
+              ),
+            ),
+          Expanded(
+            child: _buildUserList(),
+          ),
+        ],
       ),
     );
   }
@@ -73,7 +140,9 @@ class HomePage extends StatelessWidget {
 
         // Hiển thị list user
         return ListView(
-          children: snapshot.data!
+          children: _filteredUserList
+              .where((userData) =>
+                  userData["email"] != _authService.getCurrentUser()!.email)
               .map<Widget>((userData) => _buildChatCardList(userData, context))
               .toList(),
         );
@@ -87,7 +156,6 @@ class HomePage extends StatelessWidget {
       return ChatCard(
         email: userData["email"],
         imageUrl: userData["image"],
-        message: '',
         onTap: () {
           Navigator.push(
             context,

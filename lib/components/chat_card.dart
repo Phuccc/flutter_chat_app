@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 class ChatCard extends StatelessWidget {
   final String email;
   final void Function()? onTap;
-  final String message;
   final String imageUrl;
 
   const ChatCard({
     super.key,
     required this.email,
     this.onTap,
-    required this.message,
     required this.imageUrl,
   });
 

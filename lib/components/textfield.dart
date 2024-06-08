@@ -6,6 +6,8 @@ class TextField_Edit extends StatelessWidget {
   final bool obscureText;
   final TextEditingController controller;
   final FocusNode? focusNode;
+  final void Function(String)? onChanged;
+  final Widget? suffixIcon;
 
   const TextField_Edit({
     super.key,
@@ -13,6 +15,8 @@ class TextField_Edit extends StatelessWidget {
     required this.obscureText,
     required this.controller,
     this.focusNode,
+    this.onChanged,
+    this.suffixIcon,
   });
 
   @override
@@ -22,6 +26,7 @@ class TextField_Edit extends StatelessWidget {
       child: TextField(
         obscureText: obscureText,
         controller: controller,
+        onChanged: onChanged,
         focusNode: focusNode,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
@@ -35,6 +40,7 @@ class TextField_Edit extends StatelessWidget {
           ),
           fillColor: Theme.of(context).colorScheme.secondary,
           filled: true,
+          suffixIcon: suffixIcon,
           hintText: hintText,
           hintStyle: TextStyle(
             color: Theme.of(context).colorScheme.inversePrimary,
